@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m3 -mthumb -Wall -ffunction-sections -O0 -g3 -c -Dgcc -DLM3S8962 -I..\..\..\COOCOX\CoIDE\workspace -I..\..\lm3s8962 -Icmsisboot -Icmsis -Ilm3slib\inc -Ilm3slib\driverlib -Ilm3slib -I.">
+      <target file="timer.o" lastModified="13ca58ffac4">
+         <source file="..\..\lm3slib\driverlib\timer.c" lastModified="13c917bab50"/>
+      </target>
+      <target file="gpio.o" lastModified="13ca58ffeff">
+         <source file="..\..\lm3slib\driverlib\gpio.c" lastModified="132d9021180"/>
+      </target>
+      <target file="systick.o" lastModified="13ca59003bf">
+         <source file="..\..\lm3slib\driverlib\systick.c" lastModified="132d901d300"/>
+      </target>
+      <target file="RIT_display.o" lastModified="13ca5900411">
+         <source file="..\..\platformAbstraction\display\RIT_display.c" lastModified="13b9f71e1db"/>
+      </target>
+      <target file="sysctl.o" lastModified="13ca58ffdce">
+         <source file="..\..\lm3slib\driverlib\sysctl.c" lastModified="132d901fa10"/>
+      </target>
+      <target file="core_cm3.o" lastModified="13ca58ffa3c">
+         <source file="..\..\cmsis\core_cm3.c" lastModified="132d9007b40"/>
+      </target>
+      <target file="plat_uart.o" lastModified="13ca590022a">
+         <source file="..\..\platformAbstraction\plat_uart.c" lastModified="13c965a0e4a"/>
+      </target>
+      <target file="interrupt.o" lastModified="13ca58fff63">
+         <source file="..\..\lm3slib\driverlib\interrupt.c" lastModified="132d901d300"/>
+      </target>
+      <target file="plat_timer.o" lastModified="13ca58ff809">
+         <source file="..\..\platformAbstraction\plat_timer.c" lastModified="13c9f13d5bc"/>
+      </target>
+      <target file="ssi.o" lastModified="13ca5900292">
+         <source file="..\..\lm3slib\driverlib\ssi.c" lastModified="132d90230c0"/>
+      </target>
+      <target file="uart.o" lastModified="13ca58ffbf5">
+         <source file="..\..\lm3slib\driverlib\uart.c" lastModified="13c917bbc68"/>
+      </target>
+      <target file="syscalls.o" lastModified="13ca5900181">
+         <source file="..\..\syscalls\syscalls.c" lastModified="132d9007370"/>
+      </target>
+      <target file="LEDs.o" lastModified="13ca98f140f">
+         <source file="..\..\platformAbstraction\LEDs.c" lastModified="13ca98f0f07"/>
+      </target>
+      <target file="cpu.o" lastModified="13ca59002eb">
+         <source file="..\..\lm3slib\driverlib\cpu.c" lastModified="132d9007b40"/>
+      </target>
+      <target file="rit128x96x4.o" lastModified="13ca5900036">
+         <source file="..\..\utils\drivers\rit128x96x4.c" lastModified="13b2704c774"/>
+      </target>
+      <target file="console.o" lastModified="13ca590033d">
+         <source file="..\..\utils\miniconsola\console.c" lastModified="13bb1cf196d"/>
+      </target>
+      <target file="startup_lm3s.o" lastModified="13ca59000cb">
+         <source file="..\..\cmsisboot\startup\startup_lm3s.c" lastModified="13c963db897"/>
+      </target>
+      <target file="processor.o" lastModified="13ca58ff9ea">
+         <source file="..\..\platformAbstraction\processor.c" lastModified="13baf3197a7"/>
+      </target>
+      <target file="keypad.o" lastModified="13ca5900085">
+         <source file="..\..\platformAbstraction\keypad.c" lastModified="13c966cb725"/>
+      </target>
+      <target file="main.o" lastModified="13ca9991823">
+         <source file="..\..\main.c" lastModified="13ca99901ac"/>
+      </target>
+      <target file="system_lm3s.o" lastModified="13ca58ff962">
+         <source file="..\..\cmsisboot\system_lm3s.c" lastModified="132d9008310"/>
+      </target>
+   </processor>
+</history>

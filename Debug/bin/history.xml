@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="4.5.1 -O0 -nostartfiles -Map=Ascensor_v6_5.map -mcpu=cortex-m3 -mthumb -LC:\Workspaces\Coocox\Ascensor_v6_5 --gc-sections -TC:\Workspaces\Coocox\Ascensor_v6_5\link.ld -g">
+      <target file="Ascensor_v6_5.elf" lastModified="13ca9e3a5d7">
+         <source file="..\obj\plat_timer.o" lastModified="13ca58ff809"/>
+         <source file="..\obj\system_lm3s.o" lastModified="13ca58ff962"/>
+         <source file="..\obj\processor.o" lastModified="13ca58ff9ea"/>
+         <source file="..\obj\core_cm3.o" lastModified="13ca58ffa3c"/>
+         <source file="..\obj\timer.o" lastModified="13ca58ffac4"/>
+         <source file="..\obj\uart.o" lastModified="13ca58ffbf5"/>
+         <source file="..\obj\main.o" lastModified="13ca9991823"/>
+         <source file="..\obj\sysctl.o" lastModified="13ca58ffdce"/>
+         <source file="..\obj\LEDs.o" lastModified="13ca98f140f"/>
+         <source file="..\obj\gpio.o" lastModified="13ca58ffeff"/>
+         <source file="..\obj\interrupt.o" lastModified="13ca58fff63"/>
+         <source file="..\obj\rit128x96x4.o" lastModified="13ca5900036"/>
+         <source file="..\obj\keypad.o" lastModified="13ca5900085"/>
+         <source file="..\obj\startup_lm3s.o" lastModified="13ca59000cb"/>
+         <source file="..\obj\syscalls.o" lastModified="13ca5900181"/>
+         <source file="..\obj\plat_uart.o" lastModified="13ca590022a"/>
+         <source file="..\obj\ssi.o" lastModified="13ca5900292"/>
+         <source file="..\obj\cpu.o" lastModified="13ca59002eb"/>
+         <source file="..\obj\console.o" lastModified="13ca590033d"/>
+         <source file="..\obj\systick.o" lastModified="13ca59003bf"/>
+         <source file="..\obj\RIT_display.o" lastModified="13ca5900411"/>
+      </target>
+   </processor>
+</history>
