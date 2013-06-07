@@ -7,9 +7,12 @@
 //#include "platformAbstraction/sound.h"
 #include "platformAbstraction/plat_uart.h"
 #include "platformAbstraction/plat_timer.h"
+#include "platformAbstraction/security.h"
 
 #define ENVIO(valor) UARTSend((unsigned char *)valor,(unsigned long) sizeof(valor),0); \
 					 UARTSend((unsigned char *)valor,(unsigned long) sizeof(valor),1);
+
+#define ENVIO_P1(valor) UARTSend((unsigned char *)valor,(unsigned long) sizeof(valor),1);
 
 #define PR(valor, x, y ) sprintf(str, "%d", valor); \
     	     	 	     consolePrintStr(x, y, str);
@@ -51,8 +54,9 @@ const unsigned char g_pucCirc[60]  =  {
 #define ESPERANDO 1
 #define SUBIENDO 2
 #define BAJANDO 3
-#define ABRIENDO_PUERTAS 4
-#define CERRANDO_PUERTAS 5
+#define ENPISO 4
+#define ABRIENDO_PUERTAS 5
+#define CERRANDO_PUERTAS 6
 //#define REVISION '3'
 
 #define PISO_00 0x30
@@ -82,6 +86,7 @@ unsigned char g_pressed_data = false;
 
 tBoolean g_escrito;
 tBoolean g_activado;
+tBoolean g_activado_planta = false;
 tBoolean g_primero_Int0 = false;
 tBoolean g_enviado;
 
@@ -181,6 +186,18 @@ void real_to_array(void) {
 		case PISO_3:	g_inputs[3] = 1;
 						break;
 
+		case PISO_00:	g_inputs[0] = 1;
+								break;
+
+		case PISO_11:	g_inputs[1] = 1;
+								break;
+
+		case PISO_22:	g_inputs[2] = 1;
+								break;
+
+		case PISO_33:	g_inputs[3] = 1;
+								break;
+
 		default:		break;
 	}
 }
@@ -216,8 +233,7 @@ void read_switches(){
 	consolePrintStr(6, 4, str);
 	refreshConsole();*/
 
-	if (g_ucKeypadSwitches != 0xf)
-		real_to_array();
+
 
 	//array_to_image();
 }
@@ -271,6 +287,10 @@ void registrar_llamada(void) {
 void read_inputs(void) {
 
 	read_switches();
+	UARTRec();
+	UARTRec_2();
+	if (g_ucKeypadSwitches != 0xf)
+			real_to_array();
 	registrar_llamada();
 }
 
@@ -352,6 +372,32 @@ Timer3IntHandler(void)
     IntEnable(INT_TIMER3A);
 }
 
+
+void
+Timer2IntHandler(void)
+{
+	//char str[1];
+    //
+    // Clear the timer interrupt.
+    //
+    TimerIntClear(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
+
+    //
+    // Update the interrupt status on the display.
+    //
+    IntDisable(INT_TIMER2A);
+
+   // g_cont_abre_puertas++;
+    g_activado_planta = true;
+
+
+    /*sprintf(str, "%d", miAscensor.pos_actual);
+    consolePrintStr(6,4,str);
+    refreshConsoleLine(4);*/
+
+    IntEnable(INT_TIMER2A);
+}
+
 //*****************************************************************************
 //
 // The interrupt handler for the first timer interrupt.
@@ -370,12 +416,12 @@ Timer0IntHandler(void)
     // Update the interrupt status on the display.
     //
     IntDisable(INT_TIMER0A);
-
+    if (miAscensor.sig_piso[0] != -5) {
     if (miAscensor.sig_piso[0] > miAscensor.pos_actual)
     	miAscensor.pos_actual++;
-    else
+    else if (miAscensor.sig_piso[0] < miAscensor.pos_actual)
     	miAscensor.pos_actual--;
-
+    }
     //g_activado_Int0 = true;
     g_escrito = false;
 
@@ -395,7 +441,7 @@ void DISPLAY_init() {
 	//
 	// Se incluye el texto fijo a mostrar
 	//
-	consolePrintStr(2, 0, "_Ascensor v6.5c_");
+	consolePrintStr(2, 0, "_Ascensor v6.9_");
 	consolePrintStr(2, 1, "----------------");
 	refreshConsole();
 
@@ -444,7 +490,9 @@ void  ELEVATOR_HW_init(void) {
 
 		init_Timer0(3);
 
-		init_Timer3(6);
+		init_Timer2(2);
+
+		init_Timer3(4);
 
 	//
 	// Se inicializan los elementos para el Display
@@ -453,7 +501,7 @@ void  ELEVATOR_HW_init(void) {
 
 		init_structura();
 
-		ENVIO("v6.5c\n\r")
+		ENVIO("v6.9\n\r")
 }
 
 /***
@@ -484,6 +532,7 @@ void  ELEVATOR_HW_init(void) {
 		//ELEVATOR_readSwitches();
 	 //	leer_imagen();
 	 	leer_array_imagen();
+
 
 		if (!g_escrito_and_enviado){
 				eraseConsoleLine(9);
@@ -522,14 +571,16 @@ void  ELEVATOR_HW_init(void) {
 
 	 //hay que cambiar la lógica de este evento. Cuando funcione meter un estado más "Iniciando".
 
-	// if (g_ucKeypadSwitches == 0xd || g_ucKeypadSwitches == 0xe || g_ucKeypadSwitches == 0xb || g_ucKeypadSwitches == 0x7) {
-		getPiso();
+
+	 if (check_Security()) {
 		if (miAscensor.sig_piso[0] != -5) {
 			g_llamada_bool = true;
+
 			HW_Gpio_LED_Eth_Green_OFF();
 			HW_Gpio_Main_ON();
 
 		}
+
 
 
 		if ( miAscensor.sig_piso[0] > miAscensor.pos_actual ) {
@@ -553,14 +604,15 @@ void  ELEVATOR_HW_init(void) {
 				}
 
 		}
-	//}
+	}
 
  }
 
 
 
  void SUBIENDO_accion (void){
-
+//	 TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() * 3);
+	 //IntEnable(INT_TIMER0A);
 	 g_enviado = false;
 	 	if (!g_primero_Int0) {
 
@@ -612,12 +664,14 @@ void SUBIENDO_evento (void) {
 		display_and_UART_Piso();
 
 	if (miAscensor.sig_piso[0] == miAscensor.pos_actual )
-		g_ucState = ABRIENDO_PUERTAS;
+		g_ucState = ENPISO;
 }
 
 
  void BAJANDO_accion (void){
-
+	 //TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() * 3);
+	 IntEnable(INT_TIMER0A);
+	// TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() * 3);
 	 g_enviado = false;
 	 	if (!g_primero_Int0) {
 
@@ -667,16 +721,65 @@ void SUBIENDO_evento (void) {
 
 	if (miAscensor.sig_piso[0] == miAscensor.pos_actual ){
 		g_primero = false;
-		g_ucState = ABRIENDO_PUERTAS;
+		g_ucState = ENPISO;
 	}
  }
 
+ void ENPISO_accion(void) {
+
+	 IntDisable(INT_TIMER0A);
+
+
+	 if (!g_escrito) {
+
+	 			switch (miAscensor.pos_actual){
+	 				case 0: consolePrintStr(3, 6, "Piso 0");
+	 						ENVIO("P0\n\r")
+	 						ENVIO_P1(PISO_0)
+	 						break;
+
+	 				case 1: enable_Timer_0();
+	 						consolePrintStr(3, 6, "Piso 1");
+	 						ENVIO("P1\n\r")
+	 						ENVIO_P1(PISO_1)
+	 						break;
+
+	 				case 2: enable_Timer_0();
+	 						consolePrintStr(3, 6, "Piso 2");
+	 						ENVIO("P2\n\r")
+	 						ENVIO_P1(PISO_2)
+	 						break;
+
+	 				case 3: enable_Timer_0();
+	 						consolePrintStr(3, 6, "Piso 3");
+	 						ENVIO("P3\n\r")
+	 						ENVIO_P1(PISO_3)
+	 						break;
+
+	 				default: break;
+	 				}
+	 			    ENVIO("En piso\n\r")
+	 				consolePrintStr(3, 9,"En piso");
+	 				refreshConsole();
+	 				g_escrito = true;
+	 				enable_Timer_2();
+	 			}
+
+ }
+
+ void ENPISO_evento(void) {
+
+	 if (g_activado_planta)
+		 g_ucState = ABRIENDO_PUERTAS;
+  }
+
  void ABRIENDO_PUERTAS_accion(void) {
 
+	 g_activado_planta = false;
 	 if (!g_primero) {
 
 			enable_Timer_3();
-			miAscensor.pos_actual = miAscensor.sig_piso[0];
+		  //  miAscensor.pos_actual = miAscensor.sig_piso[0];
 			llamada_registrada();
 
 			g_primero = true;
@@ -772,6 +875,10 @@ void SUBIENDO_evento (void) {
 
 								break;
 
+		case ENPISO:			ENPISO_accion();
+
+								ENPISO_evento();
+
 		case ABRIENDO_PUERTAS:	ABRIENDO_PUERTAS_accion();
 
 								ABRIENDO_PUERTAS_evento();
@@ -800,61 +907,12 @@ int main(void)
     while(1)
     {
     	read_inputs();
+    	//sleep(2ms)
     	ELEVATOR_Update();
+
     }
 }
 
-
-
-
-
-/*void SEMAPHORE_task(void){
-	if ( g_ucCounter == 0 ){
-			g_ucState = GREEN;
-			SEMAPHORE_greenON();
-		}
-		if (g_ucCounter >= 15 && g_ucCounter < 25  ){
-			g_ucState = ORANGE;
-			SEMAPHORE_orangeON();
-		}
-		if (g_ucCounter ==  25){
-			g_ucState = RED;
-			SEMAPHORE_redON();
-		}
-		 SEMAPHORE_displayState();
-}
-
-void SEMAPHORE_displayState(){
-
-		RIT128x96x4StringDraw("VERDE: ", 10, 5, 15);
-		RIT128x96x4StringDraw("AMBAR: ", 10, 25, 15);
-		RIT128x96x4StringDraw("ROJO: ", 10, 45, 15);
-		RIT128x96x4StringDraw("Maq Estados Switch", 5, 65, 15);
-		RIT128x96x4StringDraw("------------------", 5, 75, 15);
-		//RIT128x96x4StringDraw(&g_revision ,105, 65, 15);
-
-		switch( g_ucState){
-			case RED: 	SEMAPHORE_dibujarCirculo( g_ucState, 55 , 5);
-				break;
-			case GREEN: SEMAPHORE_dibujarCirculo(g_ucState , 55 , 5);
-				break;
-			case ORANGE: SEMAPHORE_dibujarCirculo( g_ucState , 55 , 5);
-				break;
-			default: SEMAPHORE_dibujarCirculo( -1 , 55 , 5);
-				break;
-		}
-
-}
-void SEMAPHORE_dibujarCirculo(unsigned char state , int x , int y ){
-	int i = 0;
-	for (i = 0; i < 3 ; i++){
-		if (  state == i+1 ){
-			RIT128x96x4ImageDraw( g_pucCirc , x , y+(20*i) , 12, 10);
-		}else{
-			RIT128x96x4ImageDraw( g_pucNada , x  , y+(20*i) , 12, 10);
-		}
-	}
-}*/
 
 void SEMAPHORE_greenON(){
 	 GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);//on
