@@ -19,3 +19,24 @@ Command-line arguments:  -os win32 -ws win32 -arch x86 C:\Workspaces\Coocox\Asce
 
 !ENTRY org.eclipse.ui 4 4 2013-05-22 13:42:10.397
 !MESSAGE Invalid preference page path: Logging
+!SESSION 2013-06-05 17:31:15.023 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.6.0_17
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=es_ES
+Framework arguments:  C:\Workspaces\Coocox\Ascensor\Ascensor.cob
+Command-line arguments:  -os win32 -ws win32 -arch x86 C:\Workspaces\Coocox\Ascensor\Ascensor.cob
+
+!ENTRY org.eclipse.ui 2 0 2013-06-05 17:31:25.193
+!MESSAGE Warnings while parsing the key bindings from the 'org.eclipse.ui.commands' extension point
+!SUBENTRY 1 org.eclipse.ui 2 0 2013-06-05 17:31:25.193
+!MESSAGE Defining a key binding with no key sequence has no effect: plug-in='org.coocox.builder.ui', id='org.coocox.builder.ui.newFile'
+!SUBENTRY 1 org.eclipse.ui 2 0 2013-06-05 17:31:25.193
+!MESSAGE Defining a key binding with no key sequence has no effect: plug-in='org.coocox.builder.ui', id='org.coocox.builder.ui.newFolder'
+!SUBENTRY 1 org.eclipse.ui 2 0 2013-06-05 17:31:25.193
+!MESSAGE Defining a key binding with no key sequence has no effect: plug-in='org.coocox.builder.ui', id='org.coocox.builder.ui.newProject'
+!SUBENTRY 1 org.eclipse.ui 2 0 2013-06-05 17:31:25.193
+!MESSAGE Defining a key binding with no key sequence has no effect: plug-in='org.coocox.builder.ui', id='org.coocox.builder.ui.closeProject'
+
+!ENTRY org.eclipse.ui 4 4 2013-06-05 17:33:39.746
+!MESSAGE Invalid preference page path: Logging
