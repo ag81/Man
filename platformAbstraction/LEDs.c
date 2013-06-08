@@ -123,12 +123,12 @@ void HW_Gpio_LED_Eth_Orange_OFF(){
 
 }
 
-void HW_Gpio_Main_ON() {
+void HW_Gpio_Main_ON(void) {
 	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
 
 
 }
 
-void HW_Gpio_Main_OFF() {
+void HW_Gpio_Main_OFF(void) {
 	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
 }

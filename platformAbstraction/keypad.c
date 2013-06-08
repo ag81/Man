@@ -87,7 +87,7 @@ void ELEVATOR_readSwitches(){
 }
 
 
-void ELEVATOR_readSelect(){
+void ELEVATOR_readSelect(void){
 
 	unsigned long pressed_data;
 

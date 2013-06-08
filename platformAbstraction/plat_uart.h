@@ -50,6 +50,7 @@ void UART_init();
 void UARTSend(const unsigned char *pucBuffer, unsigned long ulCount, int iBase);
 void UARTRec();
 void UARTRec_1();
+void UARTRec_2();
 
 /*****************************************************************************
 **	 																		**
