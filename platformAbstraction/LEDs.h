@@ -33,8 +33,7 @@
 ** DEFINITIONS AND MACROS 													**
 ** 																			**
 ******************************************************************************/
-void HW_Gpio_Main_ON(void);
-void HW_Gpio_Main_OFF(void);
+
 
 /*****************************************************************************
 **	 																		**
@@ -54,7 +53,8 @@ void HW_Gpio_Main_OFF(void);
 ** 																			**
 ******************************************************************************/
 void GPIO_init();
-
+void HW_Gpio_Main_ON(void);
+void HW_Gpio_Main_OFF(void);
 void HW_Gpio_LED_Eth_Green_ON();
 void HW_Gpio_LED_Eth_Green_OFF();
 void HW_Gpio_LED_Eth_Orange_ON();
