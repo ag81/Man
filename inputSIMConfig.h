@@ -1,21 +1,19 @@
-/** @addtogroup LED_MODULE
+/**
 *
 * @{
-* @file LEDs.h
-* @brief La definicion de las funciones especificas de los GPIO para LEDs
+* @file inputSIMConfig.h
+* @brief parámetros de configuración para poder simular partes mecánicas del ascensor
 *
 * @version v1.0
-* @date   	2012-11-23
+* @date   	2013-06-09
 *
 * @note gpl2 license  2012, Andoni Galarraga
-*
 *
 * @}
 */
 
-
-#ifndef GPIOSEM_H_INCLUDED
-#define GPIOSEM_H_INCLUDED
+#ifndef INPUTSIMCONFIG_H_INCLUDED
+#define INPUTSIMCONFIG_H_INCLUDED
 
 /*****************************************************************************
 ** 																			**
@@ -23,17 +21,20 @@
 ** 																			**
 ****************************************************************************/
 
-#include "inc/hw_types.h"
-#include "inc/hw_memmap.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-
 /*****************************************************************************
 ** 																			**
 ** DEFINITIONS AND MACROS 													**
 ** 																			**
 ******************************************************************************/
 
+#define SPC 1
+#define SC_SCE 1
+#define SP 1
+#define SH 1
+#define SCM 1
+#define LV 1
+#define PFS 1
+#define PFB 1
 
 /*****************************************************************************
 **	 																		**
@@ -52,15 +53,8 @@
 ** EXPORTED FUNCTIONS 														**
 ** 																			**
 ******************************************************************************/
-void GPIO_init();
-void HW_Gpio_Main_ON(void);
-void HW_Gpio_Main_OFF(void);
-void HW_Gpio_LED_Eth_Green_ON();
-void HW_Gpio_LED_Eth_Green_OFF();
-void HW_Gpio_LED_Eth_Orange_ON();
-void HW_Gpio_LED_Eth_Orange_OFF();
 
-#endif // GPIOSEM_H_INCLUDED
+#endif //INPUTSIMCONFIG_H_INCLUDED
 
 /*****************************************************************************
 ** 																			**

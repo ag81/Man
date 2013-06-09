@@ -1,32 +1,26 @@
-/** @addtogroup LED_MODULE
+/**
 *
 * @{
-* @file LEDs.h
-* @brief La definicion de las funciones especificas de los GPIO para LEDs
+* @file inputs_reading.h
+* @brief definición de cabeceras para inputs_reading.c
 *
 * @version v1.0
-* @date   	2012-11-23
+* @date   	2013-06-09
 *
 * @note gpl2 license  2012, Andoni Galarraga
-*
 *
 * @}
 */
 
-
-#ifndef GPIOSEM_H_INCLUDED
-#define GPIOSEM_H_INCLUDED
+#ifndef INPUTS_READING_H_INCLUDED
+#define INPUTS_READING_H_INCLUDED
 
 /*****************************************************************************
 ** 																			**
 ** MODULES USED 															**
 ** 																			**
 ****************************************************************************/
-
-#include "inc/hw_types.h"
-#include "inc/hw_memmap.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
+#include "platformAbstraction/plat_uart.h"
 
 /*****************************************************************************
 ** 																			**
@@ -52,18 +46,20 @@
 ** EXPORTED FUNCTIONS 														**
 ** 																			**
 ******************************************************************************/
-void GPIO_init();
-void HW_Gpio_Main_ON(void);
-void HW_Gpio_Main_OFF(void);
-void HW_Gpio_LED_Eth_Green_ON();
-void HW_Gpio_LED_Eth_Green_OFF();
-void HW_Gpio_LED_Eth_Orange_ON();
-void HW_Gpio_LED_Eth_Orange_OFF();
+void real_to_array(void);
+void array_to_image(void);
+void read_switches(void);
+void registrar_llamada(void);
+void read_inputs(void);
 
-#endif // GPIOSEM_H_INCLUDED
+#endif //INPUTS_READING_H_INCLUDED
 
 /*****************************************************************************
 ** 																			**
 ** EOF 																		**
 ** 																			**
 ******************************************************************************/
+
+
+
+

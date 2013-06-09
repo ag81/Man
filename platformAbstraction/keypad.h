@@ -13,7 +13,7 @@
 * @note Version : 1
 * @note Date : 2012-11-22
 * @note Revised by : 	andoni.galarraga@alumni.eps.mondragon.edu
-* @note Description : version inicial sin comentarios y sin estructura de carpetas adecuadas.
+* @note Description : version inicial
 *
 * @}
 */
@@ -43,6 +43,11 @@
 #define PISO_2 0xd    //1011
 #define PISO_3 0xb    //0111
 
+#define PISO_00 0x30
+#define PISO_11 0x31
+#define PISO_22 0x32
+#define PISO_33 0x33
+
 
 /*****************************************************************************
 ** 																			**
@@ -51,6 +56,8 @@
 ******************************************************************************/
 void KEYPAD_init();
 void ELEVATOR_readSwitches();
+void ELEVATOR_readSelect(void);
+
 
 /*****************************************************************************
 **	 																		**
