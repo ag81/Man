@@ -42,6 +42,14 @@ extern int g_inputs_imagen[NUM_PISOS];
 
 tAscensor miAscensor;
 
+/**
+ * @brief Se registra la llamada encendiendo el LED
+ *
+ * @return     -
+ *
+ * Se registra la llamada encendiendo el LED
+ *
+*/
 
 void llamada_registrada(void){
 
@@ -57,11 +65,7 @@ void llamada_registrada(void){
 			//HW_Gpio_LED_Eth_Green_OFF();
 }
 
-
-
 void getPiso() {
-
-
 
 	switch(g_ucKeypadSwitches ) {
 
@@ -101,21 +105,6 @@ void getPiso() {
 						//display_and_UART_Piso();
 
 					 g_llamada_bool = false;
-	}
-}
-
-
-
-
-
-void leer_array_imagen() {
-	int i;
-	for (i=0;i<NUM_PISOS;i++) {
-		if (g_inputs_imagen[i] == 1) {
-			miAscensor.sig_piso[0] = i;
-			g_llamada_bool = true;
-		}
-		else g_llamada_bool = false;
 	}
 }
 
@@ -176,10 +165,7 @@ tBoolean comprobar_peticion(void) {
  void ESPERANDO_accion (void)
 		{
 
-	 	leer_array_imagen();
-
-
-		if (!g_escrito_and_enviado){
+	 	if (!g_escrito_and_enviado){
 				eraseConsoleLine(9);
 				consolePrintStr(3, 9,"En espera");
 				refreshConsoleLine(9);

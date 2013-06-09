@@ -1,7 +1,37 @@
+/**
+*
+* @{
+* @file main.c
+* @brief La implementacion de las funciones usadas por el main.
+*
+* @version v2.0
+* @date   	2013-06-07
+*
+* @note gpl2 license  2012, Andoni Galarraga
+*
+* @par VERSION HISTORY
+* @note Version : 1
+* @note Date : 2012-02-03
+* @note Revised by : 	andoni.galarraga@alumni.eps.mondragon.edu
+* @note Description : version inicial sin comentarios y sin estructura de carpetas adecuadas.
+*
+* @}
+*/
 
+/*********************************************************************
+**																	**
+** MODULES USED 													**
+** 																	**
+**********************************************************************/
 
 #include "inputs_reading.h"
 #include "state_machine.h"
+
+/*********************************************************************
+** 																	**
+** GLOBAL VARIABLES 												**
+** 																	**
+*********************************************************************/
 
 extern unsigned char g_ucKeypadSwitches;
 
@@ -11,6 +41,20 @@ extern tAscensor miAscensor;
 int g_inputs[NUM_PISOS] = {0, 0, 0, 0};
 int g_inputs_imagen[NUM_PISOS] = {0, 0, 0, 0};
 
+/*********************************************************************
+** 																	**
+** GLOBAL FUNCTIONS 												**
+** 																	**
+**********************************************************************/
+
+/**
+ * @brief Se pasa de la pulsación del botón al buffer de llamadas.
+ *
+ * @return     -
+ *
+ * Se pasa de la pulsación del botón al buffer de llamadas.
+ *
+*/
 
 void real_to_array(void) {
 
@@ -45,6 +89,15 @@ void real_to_array(void) {
 	}
 }
 
+/**
+ * @brief Se pasa del array inicial al array imagen
+ *
+ * @return     -
+ *
+ * Se pasa del array inicial al array imagen
+ *
+*/
+
 void array_to_image(void) {
 	int i;
 
@@ -57,6 +110,15 @@ void array_to_image(void) {
 	}
 
 }
+
+/**
+ * @brief Leer los switches o pulsación de botones
+ *
+ * @return     -
+ *
+ * Leer los switches o pulsación de botones
+ *
+*/
 
 void read_switches(void){
 
@@ -71,7 +133,14 @@ void read_switches(void){
 
 }
 
-
+/**
+ * @brief Se registra la llamada encendiendo el LED
+ *
+ * @return     -
+ *
+ * Se registra la llamada encendiendo el LED
+ *
+*/
 void registrar_llamada(void) {
 	char str[16];
 	int i;
@@ -116,6 +185,15 @@ void registrar_llamada(void) {
 	}
 	refreshConsole();
 }
+
+/**
+ * @brief Función general de leer entradas que se ejecuta periodicamente
+ *
+ * @return     -
+ *
+ * Función general de leer entradas que se ejecuta periodicamente
+ *
+*/
 
 void read_inputs(void) {
 

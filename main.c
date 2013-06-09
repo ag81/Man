@@ -1,7 +1,53 @@
+/**
+*
+* @{
+* @file main.c
+* @brief La implementacion de las funciones usadas por el main.
+*
+* @version v2.0
+* @date   	2013-06-07
+*
+* @note gpl2 license  2012, Andoni Galarraga
+*
+* @par VERSION HISTORY
+* @note Version : 1
+* @note Date : 2012-02-03
+* @note Revised by : 	andoni.galarraga@alumni.eps.mondragon.edu
+* @note Description : version inicial sin comentarios y sin estructura de carpetas adecuadas.
+*
+* @}
+*/
+
+/*********************************************************************
+**																	**
+** MODULES USED 													**
+** 																	**
+**********************************************************************/
 
 #include "state_machine.h"
 
+/*********************************************************************
+** 																	**
+** GLOBAL VARIABLES 												**
+** 																	**
+*********************************************************************/
+
 extern tAscensor miAscensor;
+
+/*********************************************************************
+** 																	**
+** LOCAL FUNCTIONS 													**
+** 																	**
+**********************************************************************/
+
+/**
+ * @brief  Inicialización del Display.
+ *
+ * @return     -
+ *
+ * Se incializa el Display a usar.
+ *
+*/
 
 void DISPLAY_init(void) {
 
@@ -18,6 +64,15 @@ void DISPLAY_init(void) {
 
 }
 
+/**
+ * @brief  Inicialización de la estructura usada como buffer.
+ *
+ * @return     -
+ *
+ * Se incializa del Buffer a usar.
+ *
+*/
+
 void init_structura(void){
 
 	miAscensor.pos_actual = 0;
@@ -27,6 +82,15 @@ void init_structura(void){
 	miAscensor.sig_piso[2] = -5;
 	miAscensor.sig_piso[3] = -5;
 }
+
+/**
+ * @brief  Inicialización del HW del ascensor.
+ *
+ * @return     -
+ *
+ * Se inicializan los elementos de Hardware necesarios de la placa
+ *
+*/
 
 void  ELEVATOR_HW_init(void) {
 
@@ -65,6 +129,15 @@ void  ELEVATOR_HW_init(void) {
 		ENVIO("v6.10\n\r")
 }
 
+/**
+ * @brief  Ejecución principal del programa
+ *
+ * @return     -
+ *
+ * Ejecución principal del programa
+ *
+*/
+
 
 int main(void)
 {
@@ -84,4 +157,9 @@ int main(void)
     return 0;
 }
 
+/*********************************************************************
+** 																	**
+** EOF 																**
+** 																	**
+**********************************************************************/
 
