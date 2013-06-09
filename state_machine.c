@@ -1,21 +1,44 @@
+/**
+ *
+ * @{
+ * @file state_machine.c
+ * @brief La implementacion de las funciones usadas por la state_machine.
+ *
+ * @version v2.0
+ * @date   	2013-06-07
+ *
+ * @note gpl2 license  2012, Andoni Galarraga
+ *
+ * @par VERSION HISTORY
+ * @note Version : 1
+ * @note Date : 2012-02-03
+ * @note Revised by : 	andoni.galarraga@alumni.eps.mondragon.edu
+ * @note Description : version inicial sin comentarios y sin estructura de carpetas adecuadas.
+ *
+ * @}
+ */
+
+/*********************************************************************
+ **																	**
+ ** MODULES USED 													**
+ ** 																**
+ **********************************************************************/
 
 #include "state_machine.h"
+#include "state_machine_aux.h"
 
-
-
-
-
-//void SEMAPHORE_init(void);
-//void SEMAPHORE_task(void);
+/*********************************************************************
+ ** 																**
+ ** GLOBAL VARIABLES 												**
+ ** 																**
+ *********************************************************************/
 
 
 unsigned char g_ucState = ESPERANDO;
 unsigned char g_ucCounter = 0;
-//unsigned char g_revision = REVISION;
 
 tBoolean g_llamada;
 tBoolean g_llamada_bool;
-//int g_posicion = 0;
 
 tBoolean g_escrito_and_enviado;
 extern unsigned char g_ucKeypadSwitches;
@@ -38,254 +61,142 @@ tBoolean g_pulsado = false;
 extern int g_inputs[NUM_PISOS];
 extern int g_inputs_imagen[NUM_PISOS];
 
-
-
 tAscensor miAscensor;
 
 /**
- * @brief Se registra la llamada encendiendo el LED
+ * @brief Accion realizada en el estado ESPERANDO
  *
  * @return     -
  *
- * Se registra la llamada encendiendo el LED
+ * Accion realizada en el estado ESPERANDO
  *
-*/
+ */
 
-void llamada_registrada(void){
-
-	int i;
-
-	for (i=0; i<3;i++) {
-
-				miAscensor.sig_piso[i] = miAscensor.sig_piso[i+1];
-
-			}
-			miAscensor.sig_piso[3] = -5;
-			HW_Gpio_Main_OFF();
-			//HW_Gpio_LED_Eth_Green_OFF();
-}
-
-void getPiso() {
-
-	switch(g_ucKeypadSwitches ) {
-
-	case PISO_0:
-					 miAscensor.sig_piso[0] = 0;
-		 	 	 	 g_llamada_bool = true;
-		 	 	 	 break;
-	case PISO_00:	 miAscensor.sig_piso[0] = 0;
-			 	 	 g_llamada_bool = true;
-			 	 	 break;
-
-	case PISO_1:
-					 miAscensor.sig_piso[0] = 1;
-			 	 	 g_llamada_bool = true;
-			 	 	 break;
-	case PISO_11:	 miAscensor.sig_piso[0] = 1;
-				 	 g_llamada_bool = true;
-				 	 break;
-
-	case PISO_2:
-					 miAscensor.sig_piso[0] = 2;
-		 	 	 	 g_llamada_bool = true;
-		 	 	 	 break;
-	case PISO_22:	 miAscensor.sig_piso[0] = 2;
-			 	 	 g_llamada_bool = true;
-			 	 	 break;
-
-	case PISO_3:
-					 miAscensor.sig_piso[0] = 3;
-		 	 	     g_llamada_bool = true;
-		 	 	     break;
-	case PISO_33:	 miAscensor.sig_piso[0] = 3;
-			 	 	 g_llamada_bool = true;
-			 	 	 break;
-
-		default:	 if (!g_escrito_and_enviado)
-						//display_and_UART_Piso();
-
-					 g_llamada_bool = false;
-	}
-}
-
-tBoolean comprobar_select() {
-
-	ELEVATOR_readSelect();
-
-	if (g_ucSelectSwitch != 0x2)
-				return true;
-			else
-				return false;
-
-
-	//espera(TIEMPO3);
-
-}
-
-void display_and_UART_Piso() {
-
-	switch (miAscensor.pos_actual){
+void ESPERANDO_accion (void)		{
+	if (!g_escrito_and_enviado){
+		eraseConsoleLine(9);
+		consolePrintStr(3, 9,"En espera");
+		refreshConsoleLine(9);
+		g_escrito_and_enviado = true;
+		ENVIO("En espera\n\r")
+		switch (miAscensor.pos_actual){
 		case 0:
-				consolePrintStr(3, 6, "Piso 0");
-				ENVIO("PB\n\r")
-				break;
+			consolePrintStr(3, 6, "Piso 0");
+			ENVIO("PB\n\r")
+			break;
 
 		case 1:
-				consolePrintStr(3, 6, "Piso 1");
-				ENVIO("P1\n\r")
-				break;
+			consolePrintStr(3, 6, "Piso 1");
+			ENVIO("P1\n\r")
+			break;
 
 		case 2:
-				consolePrintStr(3, 6, "Piso 2");
-				ENVIO("P2\n\r")
-				break;
+			consolePrintStr(3, 6, "Piso 2");
+			ENVIO("P2\n\r")
+			break;
 
 		case 3: consolePrintStr(3, 6, "Piso 3");
-				ENVIO("P3\n\r")
-				break;
+		ENVIO("P3\n\r")
+		break;
 
 		default: break;
 		}
-	refreshConsole();
-}
-
-
-
-
-tBoolean comprobar_peticion(void) {
-
-	int i;
-	for (i=0; i<4 ;i++) {
-		if (g_inputs[i] == 1)
-			return true;
+		refreshConsole();
 	}
-	return false;
+
 }
 
- void ESPERANDO_accion (void)
-		{
+/**
+ * @brief Evento para salir del estado ESPERANDO
+ *
+ * @return     -
+ *
+ * Evento para salir del estado ESPERANDO
+ *
+ */
 
-	 	if (!g_escrito_and_enviado){
-				eraseConsoleLine(9);
-				consolePrintStr(3, 9,"En espera");
-				refreshConsoleLine(9);
-				g_escrito_and_enviado = true;
-				ENVIO("En espera\n\r")
-				switch (miAscensor.pos_actual){
-					case 0:
-							consolePrintStr(3, 6, "Piso 0");
-							ENVIO("PB\n\r")
-							break;
-
-					case 1:
-							consolePrintStr(3, 6, "Piso 1");
-							ENVIO("P1\n\r")
-							break;
-
-					case 2:
-							consolePrintStr(3, 6, "Piso 2");
-							ENVIO("P2\n\r")
-							break;
-
-					case 3: consolePrintStr(3, 6, "Piso 3");
-							ENVIO("P3\n\r")
-							break;
-
-					default: break;
-					}
-				refreshConsole();
-		}
-
-		}
-
- void ESPERANDO_evento(void) {
+void ESPERANDO_evento(void) {
 
 	if (check_Security()) {
 		if (miAscensor.sig_piso[0] != -5) {
 			g_llamada_bool = true;
-
 			HW_Gpio_LED_Eth_Green_OFF();
 			HW_Gpio_Main_ON();
-
 		}
-
-
-
 		if ( miAscensor.sig_piso[0] > miAscensor.pos_actual ) {
-
-				if (g_llamada_bool) {
-
-					g_llamada_bool = false;
-					g_escrito = false;
-					g_primero_Int0 = false;
-					g_ucState = SUBIENDO;
-				}
+			if (g_llamada_bool) {
+				g_llamada_bool = false;
+				g_escrito = false;
+				g_primero_Int0 = false;
+				g_ucState = SUBIENDO;
+			}
 		}
 		else if (miAscensor.sig_piso[0] < miAscensor.pos_actual) {
-
-				if (g_llamada_bool) {
-
-					g_llamada_bool = false;
-					g_escrito = false;
-					g_primero_Int0 = false;
-					g_ucState = BAJANDO;
-				}
-
+			if (g_llamada_bool) {
+				g_llamada_bool = false;
+				g_escrito = false;
+				g_primero_Int0 = false;
+				g_ucState = BAJANDO;
+			}
 		}
 	}
+}
 
- }
+/**
+ * @brief Accion realizada en el estado SUBIENDO
+ *
+ * @return     -
+ *
+ * Accion realizada en el estado SUBIENDO
+ *
+ */
 
+void SUBIENDO_accion (void){
 
+	g_enviado = false;
+	if (!g_primero_Int0) {
+		g_primero_Int0 = true;
+		eraseConsoleLine(9);
+		consolePrintStr(3, 9,"S R");
+		refreshConsoleLine(9);
+		ENVIO("S Rapida\n\r")
+	}
+	if (!g_escrito) {
+		switch (miAscensor.pos_actual){
+		case 0: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 0");
+		ENVIO("P0\n\r")
+		break;
 
- void SUBIENDO_accion (void){
-//	 TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() * 3);
-	 //IntEnable(INT_TIMER0A);
-	 g_enviado = false;
-	 	if (!g_primero_Int0) {
+		case 1: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 1");
+		ENVIO("P1\n\r")
+		break;
 
+		case 2: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 2");
+		ENVIO("P2\n\r")
+		break;
 
+		case 3: consolePrintStr(3, 6, "Piso 3");
+		ENVIO("P3\n\r")
+		break;
 
-	 			g_primero_Int0 = true;
+		default: break;
+		}
+		g_escrito = true;
+	}
+	refreshConsoleLine(6);
+}
 
-	 			eraseConsoleLine(9);
-	 			consolePrintStr(3, 9,"S R");
-	 			refreshConsoleLine(9);
-	 			ENVIO("S Rapida\n\r")
-
-	 		}
-
-
-	 	if (!g_escrito) {
-
-			switch (miAscensor.pos_actual){
-				case 0: enable_Timer_0();
-						consolePrintStr(3, 6, "Piso 0");
-						ENVIO("P0\n\r")
-						break;
-
-				case 1: enable_Timer_0();
-						consolePrintStr(3, 6, "Piso 1");
-						ENVIO("P1\n\r")
-						break;
-
-				case 2: enable_Timer_0();
-						consolePrintStr(3, 6, "Piso 2");
-						ENVIO("P2\n\r")
-						break;
-
-				case 3: consolePrintStr(3, 6, "Piso 3");
-						ENVIO("P3\n\r")
-						break;
-
-				default: break;
-				}
-				g_escrito = true;
-			}
-
-	 		 		refreshConsoleLine(6);
-
-	 		}
+/**
+ * @brief Evento para salir del estado SUBIENDO
+ *
+ * @return     -
+ *
+ * Evento para salir del estado SUBIENDO
+ *
+ */
 
 void SUBIENDO_evento (void) {
 	if (!g_escrito_and_enviado)
@@ -295,179 +206,235 @@ void SUBIENDO_evento (void) {
 		g_ucState = ENPISO;
 }
 
+/**
+ * @brief Accion realizada en el estado BAJANDO
+ *
+ * @return     -
+ *
+ * Accion realizada en el estado BAJANDO
+ *
+ */
+void BAJANDO_accion (void){
+	IntEnable(INT_TIMER0A);
+	g_enviado = false;
+	if (!g_primero_Int0) {
+		g_primero_Int0 = true;
+		eraseConsoleLine(9);
+		consolePrintStr(3, 9,"B R");
+		refreshConsoleLine(9);
+		ENVIO("B Rapida\n\r")
+	}
+	if (!g_escrito) {
+		switch (miAscensor.pos_actual){
+		case 0: consolePrintStr(3, 6, "Piso 0");
+		ENVIO("P0\n\r")
+		break;
 
- void BAJANDO_accion (void){
-	 //TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() * 3);
-	 IntEnable(INT_TIMER0A);
-	// TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet() * 3);
-	 g_enviado = false;
-	 	if (!g_primero_Int0) {
+		case 1: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 1");
+		ENVIO("P1\n\r")
+		break;
 
-	 			g_primero_Int0 = true;
-	 			eraseConsoleLine(9);
-	 			consolePrintStr(3, 9,"B R");
-	 			refreshConsoleLine(9);
-	 			ENVIO("B Rapida\n\r")
+		case 2: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 2");
+		ENVIO("P2\n\r")
+		break;
 
-	 		}
-	 	if (!g_escrito) {
+		case 3: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 3");
+		ENVIO("P3\n\r")
+		break;
 
-			switch (miAscensor.pos_actual){
-				case 0: consolePrintStr(3, 6, "Piso 0");
-						ENVIO("P0\n\r")
-						break;
+		default: break;
+		}
+		g_escrito = true;
+	}
+	refreshConsoleLine(6);
+}
 
-				case 1: enable_Timer_0();
-						consolePrintStr(3, 6, "Piso 1");
-						ENVIO("P1\n\r")
-						break;
+/**
+ * @brief Evento para salir del estado BAJANDO
+ *
+ * @return     -
+ *
+ * Evento para salir del estado BAJANDO
+ *
+ */
 
-				case 2: enable_Timer_0();
-						consolePrintStr(3, 6, "Piso 2");
-						ENVIO("P2\n\r")
-						break;
+void BAJANDO_evento() {
 
-				case 3: enable_Timer_0();
-						consolePrintStr(3, 6, "Piso 3");
-						ENVIO("P3\n\r")
-						break;
-
-				default: break;
-				}
-				g_escrito = true;
-			}
-
-			refreshConsoleLine(6);
-
-
- }
-
- void BAJANDO_evento() {
-
-	 if (!g_escrito_and_enviado)
+	if (!g_escrito_and_enviado)
 		display_and_UART_Piso();
 
 	if (miAscensor.sig_piso[0] == miAscensor.pos_actual ){
 		g_primero = false;
 		g_ucState = ENPISO;
 	}
- }
+}
 
- void ENPISO_accion(void) {
+/**
+ * @brief Accion realizada en el estado ENPISO
+ *
+ * @return     -
+ *
+ * Accion realizada en el estado ENPISO
+ *
+ */
 
-	 IntDisable(INT_TIMER0A);
+void ENPISO_accion(void) {
 
+	IntDisable(INT_TIMER0A);
+	if (!g_escrito) {
 
-	 if (!g_escrito) {
+		switch (miAscensor.pos_actual){
+		case 0: consolePrintStr(3, 6, "Piso 0");
+		ENVIO("P0\n\r")
+		ENVIO_P1(PISO_0)
+		break;
 
-	 			switch (miAscensor.pos_actual){
-	 				case 0: consolePrintStr(3, 6, "Piso 0");
-	 						ENVIO("P0\n\r")
-	 						ENVIO_P1(PISO_0)
-	 						break;
+		case 1: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 1");
+		ENVIO("P1\n\r")
+		ENVIO_P1(PISO_1)
+		break;
 
-	 				case 1: enable_Timer_0();
-	 						consolePrintStr(3, 6, "Piso 1");
-	 						ENVIO("P1\n\r")
-	 						ENVIO_P1(PISO_1)
-	 						break;
+		case 2: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 2");
+		ENVIO("P2\n\r")
+		ENVIO_P1(PISO_2)
+		break;
 
-	 				case 2: enable_Timer_0();
-	 						consolePrintStr(3, 6, "Piso 2");
-	 						ENVIO("P2\n\r")
-	 						ENVIO_P1(PISO_2)
-	 						break;
+		case 3: enable_Timer_0();
+		consolePrintStr(3, 6, "Piso 3");
+		ENVIO("P3\n\r")
+		ENVIO_P1(PISO_3)
+		break;
 
-	 				case 3: enable_Timer_0();
-	 						consolePrintStr(3, 6, "Piso 3");
-	 						ENVIO("P3\n\r")
-	 						ENVIO_P1(PISO_3)
-	 						break;
+		default: break;
+		}
+		ENVIO("En piso\n\r")
+		consolePrintStr(3, 9,"En piso");
+		refreshConsole();
+		g_escrito = true;
+		enable_Timer_2();
+	}
+}
 
-	 				default: break;
-	 				}
-	 			    ENVIO("En piso\n\r")
-	 				consolePrintStr(3, 9,"En piso");
-	 				refreshConsole();
-	 				g_escrito = true;
-	 				enable_Timer_2();
-	 			}
+/**
+ * @brief Evento para salir del estado ENPISO
+ *
+ * @return     -
+ *
+ * Evento para salir del estado ENPISO
+ *
+ */
 
- }
+void ENPISO_evento(void) {
 
- void ENPISO_evento(void) {
+	if (g_activado_planta)
+		g_ucState = ABRIENDO_PUERTAS;
+}
 
-	 if (g_activado_planta)
-		 g_ucState = ABRIENDO_PUERTAS;
-  }
+/**
+ * @brief Accion realizada en el estado ABRIENDO_PUERTAS
+ *
+ * @return     -
+ *
+ * Accion realizada en el estado ABRIENDO_PUERTAS
+ *
+ */
 
- void ABRIENDO_PUERTAS_accion(void) {
+void ABRIENDO_PUERTAS_accion(void) {
 
-	 g_activado_planta = false;
-	 if (!g_primero) {
+	g_activado_planta = false;
+	if (!g_primero) {
 
-			enable_Timer_3();
-		  //  miAscensor.pos_actual = miAscensor.sig_piso[0];
-			llamada_registrada();
+		enable_Timer_3();
+		llamada_registrada();
 
-			g_primero = true;
+		g_primero = true;
 
-			switch (miAscensor.pos_actual){
-				case 0: consolePrintStr(3, 6, "Piso 0");
-						ENVIO("PB\n\r")
-						break;
+		switch (miAscensor.pos_actual){
+		case 0: consolePrintStr(3, 6, "Piso 0");
+		ENVIO("PB\n\r")
+		break;
 
-				case 1:	consolePrintStr(3, 6, "Piso 1");
-						ENVIO("P1\n\r")
-						break;
+		case 1:	consolePrintStr(3, 6, "Piso 1");
+		ENVIO("P1\n\r")
+		break;
 
-				case 2:	consolePrintStr(3, 6, "Piso 2");
-						ENVIO("P2\n\r")
-						break;
+		case 2:	consolePrintStr(3, 6, "Piso 2");
+		ENVIO("P2\n\r")
+		break;
 
-				case 3: consolePrintStr(3, 6, "Piso 3");
-						ENVIO("P3\n\r")
-						break;
+		case 3: consolePrintStr(3, 6, "Piso 3");
+		ENVIO("P3\n\r")
+		break;
 
-				default: break;
-				}
+		default: break;
+		}
 
-			ENVIO("Abre puer\n\r")
-			consolePrintStr(3, 9,"Abriendo puertas");
-			refreshConsole();
-			}
+		ENVIO("Abre puer\n\r")
+		consolePrintStr(3, 9,"Abriendo puertas");
+		refreshConsole();
+	}
+}
 
- }
+/**
+ * @brief Evento para salir del estado ABRIENDO_PUERTAS
+ *
+ * @return     -
+ *
+ * Evento para salir del estado ABRIENDO_PUERTAS
+ *
+ */
 
- void ABRIENDO_PUERTAS_evento(void) {
+void ABRIENDO_PUERTAS_evento(void) {
 
-	 if (g_activado) {
+	if (g_activado) {
 		g_primero = false;
 		g_activado = false;
 		g_ucState = CERRANDO_PUERTAS;
 	}
- }
+}
 
- void CERRANDO_PUERTAS_accion(void) {
+/**
+ * @brief Accion realizada en el estado CERRANDO_PUERTAS
+ *
+ * @return     -
+ *
+ * Accion realizada en el estado CERRANDO_PUERTAS
+ *
+ */
 
-	 consolePrintStr(3, 9,"Cerrando puertas");
-	 refreshConsole();
+void CERRANDO_PUERTAS_accion(void) {
 
-	 ENVIO("Cierra puer\n\r")
+	consolePrintStr(3, 9,"Cerrando puertas");
+	refreshConsole();
+	ENVIO("Cierra puer\n\r")
 
- }
+}
 
- void CERRANDO_PUERTAS_evento(void) {
+/**
+ * @brief Evento para salir del estado CERRANDO_PUERTAS
+ *
+ * @return     -
+ *
+ * Evento para salir del estado CERRANDO_PUERTAS
+ *
+ */
 
-	 volatile int i;
-	 tBoolean pulsado;
+void CERRANDO_PUERTAS_evento(void) {
 
-	 for (i=0; i<600000; i++) {
+	volatile int i;
+	tBoolean pulsado;
+
+	for (i=0; i<600000; i++) {
 
 		if (g_pulsado) {
 
 			ENVIO("Sens puerta act\n\r")
-			pulsado = false;
+					pulsado = false;
 
 			g_sensor_puerta_activado = true;
 			g_ucState = ABRIENDO_PUERTAS;
@@ -477,51 +444,62 @@ void SUBIENDO_evento (void) {
 	g_escrito_and_enviado = false;
 	g_ucState = ESPERANDO;
 
- }
+}
 
+/**
+ * @brief Función que actualiza el estado del ascensor ejecutado periódicamente
+ *
+ * @return     -
+ *
+ * Función que actualiza el estado del ascensor ejecutado periódicamente
+ *
+ */
 
+void ELEVATOR_Update(void) {
 
- void ELEVATOR_Update(void) {
+	switch (g_ucState) {
 
- 	switch (g_ucState) {
+	case ESPERANDO: 		ESPERANDO_accion();
 
-		case ESPERANDO: 		ESPERANDO_accion();
+	ESPERANDO_evento();
 
-								ESPERANDO_evento();
+	break;
 
-								break;
+	case SUBIENDO:			SUBIENDO_accion();
 
-		case SUBIENDO:			SUBIENDO_accion();
+	SUBIENDO_evento();
 
-								SUBIENDO_evento();
+	break;
 
-								break;
+	case BAJANDO: 			BAJANDO_accion();
 
-		case BAJANDO: 			BAJANDO_accion();
+	BAJANDO_evento();
 
-								BAJANDO_evento();
+	break;
 
-								break;
+	case ENPISO:			ENPISO_accion();
 
-		case ENPISO:			ENPISO_accion();
+	ENPISO_evento();
 
-								ENPISO_evento();
+	case ABRIENDO_PUERTAS:	ABRIENDO_PUERTAS_accion();
 
-		case ABRIENDO_PUERTAS:	ABRIENDO_PUERTAS_accion();
+	ABRIENDO_PUERTAS_evento();
 
-								ABRIENDO_PUERTAS_evento();
+	break;
 
-								break;
+	case CERRANDO_PUERTAS:	CERRANDO_PUERTAS_accion();
 
-		case CERRANDO_PUERTAS:	CERRANDO_PUERTAS_accion();
+	CERRANDO_PUERTAS_evento();
 
-								CERRANDO_PUERTAS_evento();
+	break;
 
-								break;
+	default:				break;
 
-		default:				break;
+	}
+}
 
-		}
- }
-
-
+/*********************************************************************
+** 																	**
+** EOF 																**
+** 																	**
+**********************************************************************/

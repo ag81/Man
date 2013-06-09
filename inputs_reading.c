@@ -26,6 +26,7 @@
 
 #include "inputs_reading.h"
 #include "state_machine.h"
+#include "state_machine_aux.h"
 
 /*********************************************************************
 ** 																	**
