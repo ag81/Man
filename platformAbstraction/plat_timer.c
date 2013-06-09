@@ -2,7 +2,7 @@
 #include "plat_timer.h"
 #include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
-#include "state_machine.h"
+#include "state_machine_aux.h"
 
 extern tBoolean g_activado;
 extern tBoolean g_escrito;

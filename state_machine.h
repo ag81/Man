@@ -20,28 +20,12 @@
 ** MODULES USED 															**
 ** 																			**
 ****************************************************************************/
-#include "utils/miniconsola/console.h"
-#include "platformAbstraction/processor.h"
-#include "platformAbstraction/LEDs.h"
-#include "platformAbstraction/keypad.h"
-//#include "platformAbstraction/sound.h"
-#include "platformAbstraction/plat_uart.h"
-#include "platformAbstraction/plat_timer.h"
-#include "platformAbstraction/security.h"
 
 /*****************************************************************************
 ** 																			**
 ** DEFINITIONS AND MACROS 													**
 ** 																			**
 ******************************************************************************/
-
-#define ENVIO(valor) UARTSend((unsigned char *)valor,(unsigned long) sizeof(valor),0); \
-					 UARTSend((unsigned char *)valor,(unsigned long) sizeof(valor),1);
-
-#define ENVIO_P1(valor) UARTSend((unsigned char *)valor,(unsigned long) sizeof(valor),1);
-
-#define PR(valor, x, y ) sprintf(str, "%d", valor); \
-    	     	 	     consolePrintStr(x, y, str);
 
 #define ESPERANDO 1
 #define SUBIENDO 2
@@ -57,12 +41,6 @@
 ** TYPEDEFS AND STRUCTURES 													**
 ** 																			**
 *****************************************************************************/
-
-typedef struct
-{	int pos_actual;
-	unsigned char g_ucState;
-	int sig_piso[4];
-} tAscensor;
 
 /*****************************************************************************
 **								 											**
