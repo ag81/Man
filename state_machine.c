@@ -26,6 +26,7 @@
 
 #include "state_machine.h"
 #include "state_machine_aux.h"
+#include "plant_simulator.h"
 
 /*********************************************************************
  ** 																**
@@ -58,10 +59,19 @@ tBoolean g_sensor_puerta_activado;
 
 tBoolean g_pulsado = false;
 
+
 extern int g_inputs[NUM_PISOS];
 extern int g_inputs_imagen[NUM_PISOS];
 
 tAscensor miAscensor;
+
+tBoolean g_subida = false;
+tBoolean g_bajada = false;
+
+tBoolean g_open_door = false;
+tBoolean g_close_door = false;
+
+extern tBoolean g_open_door_limit;
 
 /**
  * @brief Accion realizada en el estado ESPERANDO
@@ -154,6 +164,7 @@ void ESPERANDO_evento(void) {
 void SUBIENDO_accion (void){
 
 	g_enviado = false;
+	g_subida = true;
 	if (!g_primero_Int0) {
 		g_primero_Int0 = true;
 		eraseConsoleLine(9);
@@ -163,17 +174,17 @@ void SUBIENDO_accion (void){
 	}
 	if (!g_escrito) {
 		switch (miAscensor.pos_actual){
-		case 0: enable_Timer_0();
+		case 0: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 0");
 		ENVIO("P0\n\r")
 		break;
 
-		case 1: enable_Timer_0();
+		case 1: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 1");
 		ENVIO("P1\n\r")
 		break;
 
-		case 2: enable_Timer_0();
+		case 2: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 2");
 		ENVIO("P2\n\r")
 		break;
@@ -215,8 +226,9 @@ void SUBIENDO_evento (void) {
  *
  */
 void BAJANDO_accion (void){
-	IntEnable(INT_TIMER0A);
+	//IntEnable(INT_TIMER0A);
 	g_enviado = false;
+	g_bajada = true;
 	if (!g_primero_Int0) {
 		g_primero_Int0 = true;
 		eraseConsoleLine(9);
@@ -230,17 +242,17 @@ void BAJANDO_accion (void){
 		ENVIO("P0\n\r")
 		break;
 
-		case 1: enable_Timer_0();
+		case 1: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 1");
 		ENVIO("P1\n\r")
 		break;
 
-		case 2: enable_Timer_0();
+		case 2: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 2");
 		ENVIO("P2\n\r")
 		break;
 
-		case 3: enable_Timer_0();
+		case 3: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 3");
 		ENVIO("P3\n\r")
 		break;
@@ -283,7 +295,10 @@ void BAJANDO_evento() {
 
 void ENPISO_accion(void) {
 
-	IntDisable(INT_TIMER0A);
+	//IntDisable(INT_TIMER0A);
+
+	g_subida = false;
+	g_bajada = false;
 	if (!g_escrito) {
 
 		switch (miAscensor.pos_actual){
@@ -292,19 +307,19 @@ void ENPISO_accion(void) {
 		ENVIO_P1(PISO_0)
 		break;
 
-		case 1: enable_Timer_0();
+		case 1: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 1");
 		ENVIO("P1\n\r")
 		ENVIO_P1(PISO_1)
 		break;
 
-		case 2: enable_Timer_0();
+		case 2: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 2");
 		ENVIO("P2\n\r")
 		ENVIO_P1(PISO_2)
 		break;
 
-		case 3: enable_Timer_0();
+		case 3: //enable_Timer_0();
 		consolePrintStr(3, 6, "Piso 3");
 		ENVIO("P3\n\r")
 		ENVIO_P1(PISO_3)
@@ -312,11 +327,11 @@ void ENPISO_accion(void) {
 
 		default: break;
 		}
-		ENVIO("En piso\n\r")
-		consolePrintStr(3, 9,"En piso");
-		refreshConsole();
+		//ENVIO("En piso\n\r")
+		//consolePrintStr(3, 9,"En piso");
+		//refreshConsole();
 		g_escrito = true;
-		enable_Timer_2();
+		//enable_Timer_2();
 	}
 }
 
@@ -347,9 +362,11 @@ void ENPISO_evento(void) {
 void ABRIENDO_PUERTAS_accion(void) {
 
 	g_activado_planta = false;
+	g_open_door = true;
+
 	if (!g_primero) {
 
-		enable_Timer_3();
+		//enable_Timer_3();
 		llamada_registrada();
 
 		g_primero = true;
@@ -391,9 +408,10 @@ void ABRIENDO_PUERTAS_accion(void) {
 
 void ABRIENDO_PUERTAS_evento(void) {
 
-	if (g_activado) {
+	if (g_open_door_limit) {
 		g_primero = false;
 		g_activado = false;
+		g_open_door = false;
 		g_ucState = CERRANDO_PUERTAS;
 	}
 }
@@ -408,7 +426,7 @@ void ABRIENDO_PUERTAS_evento(void) {
  */
 
 void CERRANDO_PUERTAS_accion(void) {
-
+	g_open_door_limit = false;
 	consolePrintStr(3, 9,"Cerrando puertas");
 	refreshConsole();
 	ENVIO("Cierra puer\n\r")
@@ -455,7 +473,7 @@ void CERRANDO_PUERTAS_evento(void) {
  *
  */
 
-void ELEVATOR_Update(void) {
+void state_machine_execute(void) {
 
 	switch (g_ucState) {
 
@@ -496,6 +514,12 @@ void ELEVATOR_Update(void) {
 	default:				break;
 
 	}
+}
+
+void ELEVATOR_Update(void) {
+
+	state_machine_execute();
+	plant_simulator_execute();
 }
 
 /*********************************************************************

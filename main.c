@@ -59,7 +59,7 @@ void DISPLAY_init(void) {
 	//
 	// Se incluye el texto fijo a mostrar
 	//
-	consolePrintStr(2, 0, "_Asc v6.10_");
+	consolePrintStr(2, 0, "_Asc v6.11c_");
 	consolePrintStr(2, 1, "----------------");
 	refreshConsole();
 
@@ -114,11 +114,11 @@ void  ELEVATOR_HW_init(void) {
 	//
 		UART_init();
 
-		init_Timer0(3);
+		init_Timer0(2);
 
 		init_Timer2(2);
 
-		init_Timer3(4);
+		init_Timer3(2);
 
 	//
 	// Se inicializan los elementos para el Display
@@ -127,7 +127,7 @@ void  ELEVATOR_HW_init(void) {
 
 		init_structura();
 
-		ENVIO("v6.10\n\r")
+		ENVIO("v6.11c\n\r")
 }
 
 /**

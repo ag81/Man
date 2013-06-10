@@ -33,12 +33,12 @@
 			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
 				<pathentry kind="src" path=""/>
 				<pathentry include="C:/Apps/CoIDE/gcc/Sourcery G++ Lite/arm-none-eabi/include" kind="inc" path="" system="true"/>
-				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_9" kind="inc" path="" system="true"/>
-				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_9/lm3slib" kind="inc" path="" system="true"/>
-				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_9/lm3slib/driverlib" kind="inc" path="" system="true"/>
-				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_9/lm3slib/inc" kind="inc" path="" system="true"/>
-				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_9/cmsis" kind="inc" path="" system="true"/>
-				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_9/cmsisboot" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_11" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_11/lm3slib" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_11/lm3slib/driverlib" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_11/lm3slib/inc" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_11/cmsis" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Workspaces/Coocox/Ascensor_v6_11/cmsisboot" kind="inc" path="" system="true"/>
 				<pathentry include="C:/Workspaces/lm3s8962" kind="inc" path="" system="true"/>
 				<pathentry include="C:/COOCOX/CoIDE/workspace" kind="inc" path="" system="true"/>
 				<pathentry kind="mac" name="__GNUC__" path="" value=""/>
