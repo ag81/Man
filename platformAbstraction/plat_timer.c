@@ -10,6 +10,9 @@ extern tBoolean g_escrito;
 extern tBoolean g_activado_planta;
 extern tAscensor miAscensor;
 
+tBoolean g_timer3_expired = false;
+tBoolean g_timer0_expired = false;
+
 void init_Timer0(int factor){
 
 		SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
@@ -46,6 +49,11 @@ void enable_Timer_0(void) {
 		    // Enable the timer.
 		    //
 		    TimerEnable(TIMER0_BASE, TIMER_A);
+
+}
+
+void disable_Timer0(void) {
+	IntDisable(INT_TIMER0A);
 
 }
 
@@ -131,6 +139,11 @@ void enable_Timer_3(void) {
 
 }
 
+void disable_Timer3(void) {
+	IntDisable(INT_TIMER3A);
+
+}
+
 void
 Timer3IntHandler(void)
 {
@@ -148,6 +161,8 @@ Timer3IntHandler(void)
    // g_cont_abre_puertas++;
     g_activado = true;
     g_escrito = false;
+    g_timer3_expired = true;
+
 
     /*sprintf(str, "%d", miAscensor.pos_actual);
     consolePrintStr(6,4,str);
@@ -175,6 +190,7 @@ Timer2IntHandler(void)
     g_activado_planta = true;
 
 
+
     /*sprintf(str, "%d", miAscensor.pos_actual);
     consolePrintStr(6,4,str);
     refreshConsoleLine(4);*/
@@ -200,12 +216,15 @@ Timer0IntHandler(void)
     // Update the interrupt status on the display.
     //
     IntDisable(INT_TIMER0A);
-    if (miAscensor.sig_piso[0] != -5) {
-    if (miAscensor.sig_piso[0] > miAscensor.pos_actual)
-    	miAscensor.pos_actual++;
-    else if (miAscensor.sig_piso[0] < miAscensor.pos_actual)
-    	miAscensor.pos_actual--;
-    }
+    //if (miAscensor.sig_piso[0] != -5) {
+    //if (miAscensor.sig_piso[0] > miAscensor.pos_actual)
+    //	miAscensor.pos_actual++;
+    //else if (miAscensor.sig_piso[0] < miAscensor.pos_actual)
+   // 	miAscensor.pos_actual--;
+   //}
+
+    g_timer0_expired = true;
+
     //g_activado_Int0 = true;
     g_escrito = false;
 
