@@ -56,6 +56,7 @@ tBoolean g_primero_Int0 = false;
 tBoolean g_enviado;
 
 tBoolean g_primero;
+tBoolean g_primero_check = false;
 tBoolean g_peticion;
 tBoolean g_sensor_puerta_activado;
 
@@ -456,9 +457,33 @@ void CERRANDO_PUERTAS_evento(void) {
 		}
 	}
 	g_escrito_and_enviado = false;
-	g_ucState = ESPERANDO;
+	g_ucState = CHECK_BUFFER;
 
 }
+
+void CHECK_BUFFER_accion(void) {
+
+
+	if (!g_primero_check) {
+
+		g_primero_check = true;
+
+		ENVIO("Buf_check\n\r")
+		consolePrintStr(3, 9,"Buf_check");
+		refreshConsole();
+	}
+}
+
+void CHECK_BUFFER_evento(void) {
+
+	g_primero_check = false;
+	if (check_Security()) {
+		comprobar_buffer_llamadas();
+		if (g_ucState == CHECK_BUFFER)
+			g_ucState = ESPERANDO;
+	}
+}
+
 
 /**
  * @brief Función que actualiza el estado del ascensor ejecutado periódicamente
@@ -507,7 +532,13 @@ void state_machine_execute(void) {
 
 	break;
 
-	default:				break;
+	case CHECK_BUFFER:	CHECK_BUFFER_accion();
+
+	CHECK_BUFFER_evento();
+
+	break;
+
+	default:			break;
 
 	}
 }
