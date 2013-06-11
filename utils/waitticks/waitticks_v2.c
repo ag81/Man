@@ -1,14 +1,19 @@
-/** @addtogroup LED_MODULE
+/** @addtogroup waitticks_MODULE
 *
 * @{
-* @file LEDs.c
-* @brief La implementacion de las funciones especificas de los GPIO para LEDs
+* @file waitticks_v2.c
+* @brief La implementacion de las funciones del waittick.
 *
-* @version v1.0
+* @version v2.0
 * @date   	2012-11-23
 *
 * @note gpl2 license  2012, Andoni Galarraga
 *
+* @par VERSION HISTORY
+* @note Version : 1
+* @note Date : 2012-11-22
+* @note Revised by : 	andoni.galarraga@alumni.eps.mondragon.edu
+* @note Description : version inicial sin comentarios y sin estructura de carpetas adecuadas.
 *
 * @}
 */
@@ -18,8 +23,8 @@
 ** MODULES USED 															**
 ** 																			**
 ****************************************************************************/
-#include "LEDs.h"
 
+#include "waitticks.h"
 
 /*********************************************************************
 ** 																	**
@@ -51,6 +56,12 @@
 ** 																	**
 **********************************************************************/
 
+static unsigned int contador;
+
+int g_selector;
+
+#define CICLOS 4
+
 /*********************************************************************
 ** 																	**
 ** EXPORTED FUNCTIONS 												**
@@ -58,63 +69,38 @@
 **********************************************************************/
 
 /**
- * @brief  Inicializa el GPIOF para el uso de los LEDs, cada uno con el pin correspondiente
+ * @brief  Inicializa los ticks, configurando el periodo con el que se realizara
  * @param void
  * @return void
  *
  */
+void init_WaitTick(void) {
+	// periodo=25 ms seg Programamos el period del Ticka 400.000 -> CPU a 16 Mhz, interrumpe cada 25ms.
 
-void GPIO_init(){
-		SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-		 //LED-AK
-		GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0); //led de placa
-		GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2); //primer led del  rj45
-		GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_3);//primer led del  rj45
-		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
+	SysTickPeriodSet(400000);
+	// Habilitar para que provoque interrupciones
+	SysTickIntEnable();
+	SysTickEnable();
+	IntMasterEnable();
+	contador = 0;
 }
+
+
 
 /**
- * @brief  Cuando esta en ambar se activa uno de los LEDs del Ethernet
+ * @brief Funcion que salta cuando se ejecuta la interrupcion, segun la configuracion de micro y periodo de ciclos
+ * sera cada 25ms.
  * @param void
  * @return void
- *
+ * @details En startup_lm3.c hay que definir esta funcion como extern, para que sepa que la implementamos nosotros.
  */
 
-void HW_Gpio_LED_Eth_Green_ON(){
-
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
-
-}
-
-void HW_Gpio_LED_Eth_Green_OFF(){
-
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
-
-}
-
-void HW_Gpio_LED_Eth_Orange_ON(){
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, 0);
-
-}
-
-void HW_Gpio_LED_Eth_Orange_OFF(){
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
-
-}
-
-void HW_Gpio_Main_ON(void) {
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
-
-
-}
-
-void HW_Gpio_Main_OFF(void) {
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
-}
+void SysTickInt_Handler(void) {
+	contador++;
+	if (contador %4 == 0)
+		g_selector = 0;
+	else if(contador %4 == 1)
+		g_selector = 1;
+	else if (contador % 4 == 2 || contador % 4 ==3)
+		g_selector = 2;
+	}
