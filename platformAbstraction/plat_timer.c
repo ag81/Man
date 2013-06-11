@@ -164,6 +164,7 @@ Timer3IntHandler(void)
     g_timer3_expired = true;
 
 
+
     /*sprintf(str, "%d", miAscensor.pos_actual);
     consolePrintStr(6,4,str);
     refreshConsoleLine(4);*/
@@ -216,12 +217,7 @@ Timer0IntHandler(void)
     // Update the interrupt status on the display.
     //
     IntDisable(INT_TIMER0A);
-    //if (miAscensor.sig_piso[0] != -5) {
-    //if (miAscensor.sig_piso[0] > miAscensor.pos_actual)
-    //	miAscensor.pos_actual++;
-    //else if (miAscensor.sig_piso[0] < miAscensor.pos_actual)
-   // 	miAscensor.pos_actual--;
-   //}
+
 
     g_timer0_expired = true;
 

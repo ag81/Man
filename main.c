@@ -35,6 +35,8 @@
 
 extern tAscensor miAscensor;
 
+extern int g_selector;
+
 /*********************************************************************
 ** 																	**
 ** LOCAL FUNCTIONS 													**
@@ -59,7 +61,7 @@ void DISPLAY_init(void) {
 	//
 	// Se incluye el texto fijo a mostrar
 	//
-	consolePrintStr(2, 0, "_Asc v6.11c_");
+	consolePrintStr(2, 0, "_Asc v6.12a_16M_");
 	consolePrintStr(2, 1, "----------------");
 	refreshConsole();
 
@@ -127,7 +129,9 @@ void  ELEVATOR_HW_init(void) {
 
 		init_structura();
 
-		ENVIO("v6.11c\n\r")
+		init_WaitTick();
+
+		ENVIO("v6.12a_16M\n\r")
 }
 
 /**
@@ -147,16 +151,19 @@ int main(void)
 
     while(1)
     {
-    	//
-    	read_inputs();
-
-    	//sleep(2ms)
-    	ELEVATOR_Update();
-
+    	switch(g_selector) {
+    	case 0:	read_inputs();
+    			break;
+    	case 1: ELEVATOR_Update();
+    			break;
+    	default: break;
+    	}
     }
 
     return 0;
 }
+
+
 
 /*********************************************************************
 ** 																	**

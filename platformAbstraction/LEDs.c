@@ -75,20 +75,6 @@ void GPIO_init(){
 }
 
 /**
- * @brief  Cuando esta en verde se activa el LED "principal"
- * @param void
- * @return void
- *
- */
-
-/*void HW_Gpio_greenON(){
-
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_0);
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_0);
-}*/
-
-/**
  * @brief  Cuando esta en ambar se activa uno de los LEDs del Ethernet
  * @param void
  * @return void

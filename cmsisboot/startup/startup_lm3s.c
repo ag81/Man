@@ -105,7 +105,9 @@ extern void SystemInit(void);    /*!< Setup the microcontroller system(CMSIS) */
 void Default_Reset_Handler(void);   /*!< Default reset handler                */
 static void Default_Handler(void);  /*!< Default exception handler            */
 extern void Timer0IntHandler(void);
+extern void Timer2IntHandler(void);
 extern void Timer3IntHandler(void);
+void SysTickInt_Handler(void);
 
 
 /**
@@ -129,7 +131,7 @@ void (* const g_pfnVectors[])(void) =
   DebugMon_Handler,                    /*!< Debug monitor handler             */
   0,                                   /*!< Reserved                          */
   PendSV_Handler,                      /*!< The PendSV handler                */
-  SysTick_Handler,                     /*!< The SysTick handler               */ 
+  SysTickInt_Handler,                     /*!< The SysTick handler               */
   
   /*----------External Exceptions---------------------------------------------*/
   GPIOPortA_IRQHandler,                /*!<  0: GPIO Port A                   */
@@ -155,7 +157,7 @@ void (* const g_pfnVectors[])(void) =
   Timer0B_IRQHandler,                  /*!< 20: Timer 0 subtimer B            */
   Timer1A_IRQHandler,                  /*!< 21: Timer 1 subtimer A            */
   Timer1B_IRQHandler,                  /*!< 22: Timer 1 subtimer B            */
-  Timer2A_IRQHandler,                  /*!< 23: Timer 2 subtimer A            */ 
+  Timer2IntHandler,                  /*!< 23: Timer 2 subtimer A            */
   Timer2B_IRQHandler,                  /*!< 24: Timer 2 subtimer B            */
   Comp0_IRQHandler,                    /*!< 25: Analog Comparator 0           */
   Comp1_IRQHandler,                    /*!< 26: Analog Comparator 1           */
