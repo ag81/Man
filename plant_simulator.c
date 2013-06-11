@@ -20,7 +20,7 @@ extern tBoolean g_close_door;
 
 void plant_simulator_execute(void){
 
-	//enable_Timer_3();
+	//execite para timer de subida();
 
 	if (g_subida || g_bajada) {
 			if (!g_timer0_activado) {
