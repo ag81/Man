@@ -33,6 +33,7 @@
 #define ENPISO 4
 #define ABRIENDO_PUERTAS 5
 #define CERRANDO_PUERTAS 6
+#define CHECK_BUFFER 7
 
 #define NUM_PISOS 4
 

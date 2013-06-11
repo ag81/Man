@@ -48,12 +48,15 @@ extern unsigned char g_ucSelectSwitch;
 unsigned char g_pressed_data = false;
 
 tBoolean g_escrito;
+tBoolean g_escrito_piso;
+
 tBoolean g_activado;
 tBoolean g_activado_planta = false;
 tBoolean g_primero_Int0 = false;
 tBoolean g_enviado;
 
 tBoolean g_primero;
+tBoolean g_primero_check = false;
 tBoolean g_peticion;
 tBoolean g_sensor_puerta_activado;
 
@@ -67,11 +70,13 @@ tAscensor miAscensor;
 
 tBoolean g_subida = false;
 tBoolean g_bajada = false;
+tBoolean g_lenta = false;
 
 tBoolean g_open_door = false;
 tBoolean g_close_door = false;
 
 extern tBoolean g_open_door_limit;
+extern tBoolean g_timer0_expired;
 
 /**
  * @brief Accion realizada en el estado ESPERANDO
@@ -128,27 +133,7 @@ void ESPERANDO_accion (void)		{
 void ESPERANDO_evento(void) {
 
 	if (check_Security()) {
-		if (miAscensor.sig_piso[0] != -5) {
-			g_llamada_bool = true;
-			HW_Gpio_LED_Eth_Green_OFF();
-			HW_Gpio_Main_ON();
-		}
-		if ( miAscensor.sig_piso[0] > miAscensor.pos_actual ) {
-			if (g_llamada_bool) {
-				g_llamada_bool = false;
-				g_escrito = false;
-				g_primero_Int0 = false;
-				g_ucState = SUBIENDO;
-			}
-		}
-		else if (miAscensor.sig_piso[0] < miAscensor.pos_actual) {
-			if (g_llamada_bool) {
-				g_llamada_bool = false;
-				g_escrito = false;
-				g_primero_Int0 = false;
-				g_ucState = BAJANDO;
-			}
-		}
+		comprobar_buffer_llamadas();
 	}
 }
 
@@ -213,7 +198,8 @@ void SUBIENDO_evento (void) {
 	if (!g_escrito_and_enviado)
 		display_and_UART_Piso();
 
-	if (miAscensor.sig_piso[0] == miAscensor.pos_actual )
+	//if ((miAscensor.sig_piso[0] == miAscensor.pos_actual) && g_timer3_expired)
+	if ((miAscensor.sig_piso[0] == miAscensor.pos_actual) && g_timer0_expired)
 		g_ucState = ENPISO;
 }
 
@@ -273,12 +259,13 @@ void BAJANDO_accion (void){
  *
  */
 
-void BAJANDO_evento() {
+void BAJANDO_evento(void) {
 
 	if (!g_escrito_and_enviado)
 		display_and_UART_Piso();
 
-	if (miAscensor.sig_piso[0] == miAscensor.pos_actual ){
+	//if ((miAscensor.sig_piso[0] == miAscensor.pos_actual) && g_timer3_expired){
+	if (miAscensor.sig_piso[0] == miAscensor.pos_actual) {
 		g_primero = false;
 		g_ucState = ENPISO;
 	}
@@ -296,10 +283,16 @@ void BAJANDO_evento() {
 void ENPISO_accion(void) {
 
 	//IntDisable(INT_TIMER0A);
+// PROBAU HAUEK LLAMANDO PUERTASEN SARTUTA ea zmz dijon. Eta Lenta geittu eta Timer2ri deittu azpin. Cerrar Puertas
+	// Timer 1a implementatu eta Check State bat baita sartu.
 
-	g_subida = false;
-	g_bajada = false;
-	if (!g_escrito) {
+
+	g_lenta = true;
+	if (!g_escrito_piso) {
+
+		consolePrintStr(3, 9,"Len");
+		refreshConsoleLine(9);
+		ENVIO("Len\n\r")
 
 		switch (miAscensor.pos_actual){
 		case 0: consolePrintStr(3, 6, "Piso 0");
@@ -327,11 +320,11 @@ void ENPISO_accion(void) {
 
 		default: break;
 		}
-		//ENVIO("En piso\n\r")
-		//consolePrintStr(3, 9,"En piso");
-		//refreshConsole();
-		g_escrito = true;
-		//enable_Timer_2();
+		ENVIO("En piso\n\r")
+		consolePrintStr(3, 9,"En piso");
+		refreshConsole();
+		g_escrito_piso = true;
+
 	}
 }
 
@@ -348,7 +341,7 @@ void ENPISO_evento(void) {
 
 	if (g_activado_planta)
 		g_ucState = ABRIENDO_PUERTAS;
-}
+	}
 
 /**
  * @brief Accion realizada en el estado ABRIENDO_PUERTAS
@@ -360,6 +353,10 @@ void ENPISO_evento(void) {
  */
 
 void ABRIENDO_PUERTAS_accion(void) {
+
+	g_subida = false;
+	g_bajada = false;
+	g_lenta = false;
 
 	g_activado_planta = false;
 	g_open_door = true;
@@ -460,9 +457,33 @@ void CERRANDO_PUERTAS_evento(void) {
 		}
 	}
 	g_escrito_and_enviado = false;
-	g_ucState = ESPERANDO;
+	g_ucState = CHECK_BUFFER;
 
 }
+
+void CHECK_BUFFER_accion(void) {
+
+
+	if (!g_primero_check) {
+
+		g_primero_check = true;
+
+		ENVIO("Buf_check\n\r")
+		consolePrintStr(3, 9,"Buf_check");
+		refreshConsole();
+	}
+}
+
+void CHECK_BUFFER_evento(void) {
+
+	g_primero_check = false;
+	if (check_Security()) {
+		comprobar_buffer_llamadas();
+		if (g_ucState == CHECK_BUFFER)
+			g_ucState = ESPERANDO;
+	}
+}
+
 
 /**
  * @brief Función que actualiza el estado del ascensor ejecutado periódicamente
@@ -511,7 +532,13 @@ void state_machine_execute(void) {
 
 	break;
 
-	default:				break;
+	case CHECK_BUFFER:	CHECK_BUFFER_accion();
+
+	CHECK_BUFFER_evento();
+
+	break;
+
+	default:			break;
 
 	}
 }

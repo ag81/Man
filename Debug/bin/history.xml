@@ -1,28 +1,34 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="4.5.1 -O0 -nostartfiles -Map=Ascensor_v6_5.map -mcpu=cortex-m3 -mthumb -LC:\Workspaces\Coocox\Ascensor_v6_5 --gc-sections -TC:\Workspaces\Coocox\Ascensor_v6_5\link.ld -g">
-      <target file="Ascensor_v6_5.elf" lastModified="13ca9e3a5d7">
-         <source file="..\obj\plat_timer.o" lastModified="13ca58ff809"/>
-         <source file="..\obj\system_lm3s.o" lastModified="13ca58ff962"/>
-         <source file="..\obj\processor.o" lastModified="13ca58ff9ea"/>
-         <source file="..\obj\core_cm3.o" lastModified="13ca58ffa3c"/>
-         <source file="..\obj\timer.o" lastModified="13ca58ffac4"/>
-         <source file="..\obj\uart.o" lastModified="13ca58ffbf5"/>
-         <source file="..\obj\main.o" lastModified="13ca9991823"/>
-         <source file="..\obj\sysctl.o" lastModified="13ca58ffdce"/>
-         <source file="..\obj\LEDs.o" lastModified="13ca98f140f"/>
-         <source file="..\obj\gpio.o" lastModified="13ca58ffeff"/>
-         <source file="..\obj\interrupt.o" lastModified="13ca58fff63"/>
-         <source file="..\obj\rit128x96x4.o" lastModified="13ca5900036"/>
-         <source file="..\obj\keypad.o" lastModified="13ca5900085"/>
-         <source file="..\obj\startup_lm3s.o" lastModified="13ca59000cb"/>
-         <source file="..\obj\syscalls.o" lastModified="13ca5900181"/>
-         <source file="..\obj\plat_uart.o" lastModified="13ca590022a"/>
-         <source file="..\obj\ssi.o" lastModified="13ca5900292"/>
-         <source file="..\obj\cpu.o" lastModified="13ca59002eb"/>
-         <source file="..\obj\console.o" lastModified="13ca590033d"/>
-         <source file="..\obj\systick.o" lastModified="13ca59003bf"/>
-         <source file="..\obj\RIT_display.o" lastModified="13ca5900411"/>
+   <processor signature="4.5.1 -O0 -nostartfiles -Map=Ascensor_v6_14.map -mcpu=cortex-m3 -mthumb -LC:\Workspaces\Coocox\Ascensor_v6_14 --gc-sections -TC:\Workspaces\Coocox\Ascensor_v6_14\link.ld -g">
+      <target file="Ascensor_v6_14.elf" lastModified="13f331d1fc5">
+         <source file="..\obj\plat_timer.o" lastModified="13f331ba000"/>
+         <source file="..\obj\system_lm3s.o" lastModified="13f331a7d98"/>
+         <source file="..\obj\processor.o" lastModified="13f331a7dc8"/>
+         <source file="..\obj\core_cm3.o" lastModified="13f331a7e0d"/>
+         <source file="..\obj\timer.o" lastModified="13f331a7e5c"/>
+         <source file="..\obj\uart.o" lastModified="13f331a7f3f"/>
+         <source file="..\obj\inputs_reading.o" lastModified="13f331ba05e"/>
+         <source file="..\obj\main.o" lastModified="13f331ba0b5"/>
+         <source file="..\obj\sysctl.o" lastModified="13f331a8094"/>
+         <source file="..\obj\LEDs.o" lastModified="13f331a80ce"/>
+         <source file="..\obj\gpio.o" lastModified="13f331a81cf"/>
+         <source file="..\obj\state_machine.o" lastModified="13f331ba131"/>
+         <source file="..\obj\security.o" lastModified="13f331a8282"/>
+         <source file="..\obj\waitticks_v2.o" lastModified="13f331a82b5"/>
+         <source file="..\obj\interrupt.o" lastModified="13f331a82f7"/>
+         <source file="..\obj\rit128x96x4.o" lastModified="13f331a8395"/>
+         <source file="..\obj\keypad.o" lastModified="13f331a83ed"/>
+         <source file="..\obj\startup_lm3s.o" lastModified="13f331a841c"/>
+         <source file="..\obj\syscalls.o" lastModified="13f331a8462"/>
+         <source file="..\obj\plat_uart.o" lastModified="13f331a84a8"/>
+         <source file="..\obj\ssi.o" lastModified="13f331a84ec"/>
+         <source file="..\obj\plant_simulator.o" lastModified="13f331ba184"/>
+         <source file="..\obj\cpu.o" lastModified="13f331a8567"/>
+         <source file="..\obj\console.o" lastModified="13f331a85ae"/>
+         <source file="..\obj\state_machine_aux.o" lastModified="13f331ba1dc"/>
+         <source file="..\obj\systick.o" lastModified="13f331a863e"/>
+         <source file="..\obj\RIT_display.o" lastModified="13f331a866b"/>
       </target>
    </processor>
 </history>
