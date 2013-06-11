@@ -61,7 +61,7 @@ void DISPLAY_init(void) {
 	//
 	// Se incluye el texto fijo a mostrar
 	//
-	consolePrintStr(2, 0, "_Asc v6.12a_16M_");
+	consolePrintStr(2, 0, "_Asc v6.14a_16M_");
 	consolePrintStr(2, 1, "----------------");
 	refreshConsole();
 
@@ -131,7 +131,7 @@ void  ELEVATOR_HW_init(void) {
 
 		init_WaitTick();
 
-		ENVIO("v6.12a_16M\n\r")
+		ENVIO("v6.14a_16M\n\r")
 }
 
 /**

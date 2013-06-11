@@ -26,6 +26,7 @@
  **********************************************************************/
 
 #include "state_machine_aux.h"
+#include "state_machine.h"
 
 /*********************************************************************
  ** 																**
@@ -35,6 +36,11 @@
 
 extern tAscensor miAscensor;
 extern unsigned char g_ucSelectSwitch;
+
+extern tBoolean g_llamada_bool;
+extern tBoolean g_escrito;
+extern unsigned char g_ucState;
+extern tBoolean g_primero_Int0;
 
 /*********************************************************************
  ** 																**
@@ -118,6 +124,46 @@ void display_and_UART_Piso(void) {
 	default: break;
 	}
 	refreshConsole();
+}
+
+/**
+ * @brief Se comprueba de que el buffer tiene una llamada pendiente
+ *
+ * @return     -
+ *
+ * Se comprueba de que el buffer tiene una llamada pendiente
+ *
+ */
+void comprobar_buffer_llamadas(void) {
+
+	if (miAscensor.sig_piso[0] != -5) {
+			g_llamada_bool = true;
+			HW_Gpio_LED_Eth_Green_OFF();
+			HW_Gpio_Main_ON();
+
+		}
+		if ( miAscensor.sig_piso[0] > miAscensor.pos_actual ) {
+			if (g_llamada_bool) {
+				g_llamada_bool = false;
+				g_escrito = false;
+				g_primero_Int0 = false;
+				g_ucState = SUBIENDO;
+
+			}
+		}
+		else if (miAscensor.sig_piso[0] < miAscensor.pos_actual) {
+			if (g_llamada_bool) {
+				g_llamada_bool = false;
+				g_escrito = false;
+				g_primero_Int0 = false;
+				g_ucState = BAJANDO;
+
+			}
+		}
+		/*if (g_ucState == SUBIENDO || g_ucState == BAJANDO)
+				return true;
+		else return false;*/
+
 }
 
 /*********************************************************************

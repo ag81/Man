@@ -35,6 +35,7 @@
 #include "platformAbstraction/plat_uart.h"
 #include "platformAbstraction/plat_timer.h"
 #include "platformAbstraction/security.h"
+#include "utils/waitticks/waitticks.h"
 
 /*****************************************************************************
 ** 																			**
@@ -77,6 +78,8 @@ typedef struct
 void llamada_registrada(void);
 tBoolean comprobar_select(void);
 void display_and_UART_Piso(void);
+
+void comprobar_buffer_llamadas(void);
 
 #endif // STATE_MACHINE_AUX_H_INCLUDED
 
